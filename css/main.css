@@ -1,0 +1,56 @@
+@import url('https://fonts.googleapis.com/css2?family=Epunda+Sans:ital,wght@0,300..900;1,300..900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: "Epunda Sans", sans-serif;
+}
+
+body {
+    background-color: #000;
+    color: #fff;
+}
+
+.circle-container {
+    position: relative;
+    width: 90vw;
+    height: 90vh;
+    padding: 8px;
+}
+
+.letter {
+    font-size: 1.9rem;
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    top: 50%;
+    left: 50%;
+    transform-origin: 0 -45vmin;
+    border: 1px solid #fff;
+    cursor: pointer;
+}
+
+.buttons-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: left;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.buttons-container button {
+    font-size: 1.5rem;
+    margin: 6px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 220px;
+    background-color: #70707042;
+    color: #fff;
+}

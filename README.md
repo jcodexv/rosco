@@ -1,2 +1,2 @@
 # Rosco
-A game to play the Argentine game know as Rosco (school project)
+A game to play the Argentine game known as Rosco (school project)
