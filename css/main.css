@@ -4,25 +4,55 @@
     margin: 0;
     padding: 0;
     font-family: "Epunda Sans", sans-serif;
+    box-sizing: border-box;
 }
 
 body {
     background-color: #000;
     color: #fff;
+    overflow: hidden;
+}
+
+.rosco-game {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    min-height: 100vh;
+    position: relative;
+    text-align: center;
+}
+
+.game-header {
+    margin-bottom: 25px;
+}
+
+.game-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+#timer {
+    font-size: 1.8rem;
+    color: #ffeb3b;
+    margin-bottom: -40px;
 }
 
 .circle-container {
     position: relative;
-    width: 90vw;
-    height: 90vh;
-    padding: 8px;
+    width: 85vmin;
+    height: 85vmin;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .letter {
-    font-size: 1.9rem;
+    font-size: 1.8rem;
     position: absolute;
-    width: 60px;
-    height: 60px;
+    width: 55px;
+    height: 55px;
     border-radius: 50%;
     display: flex;
     justify-content: center;
@@ -30,27 +60,72 @@ body {
     font-weight: bold;
     top: 50%;
     left: 50%;
-    transform-origin: 0 -45vmin;
     border: 1px solid #fff;
     cursor: pointer;
+    transition: 0.7s background-color, 0.7s border;
 }
 
 .buttons-container {
+    position: absolute;
+    bottom: 30px;
+    left: 30px;
     display: flex;
-    flex-wrap: wrap;
-    justify-content: left;
     flex-direction: column;
-    align-items: flex-start;
+    gap: 15px;
 }
 
 .buttons-container button {
     font-size: 1.5rem;
-    margin: 6px;
-    padding: 10px 20px;
+    padding: 12px 15px;
     border: none;
-    border-radius: 5px;
+    border-radius: 12px;
     cursor: pointer;
-    width: 220px;
-    background-color: #70707042;
+    width: 160px;
     color: #fff;
+    background: linear-gradient(145deg, rgba(0, 0, 0, 0.6), rgba(50, 50, 50, 0.8));
+    border: 1px solid #fff;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+    transition: 0.3s all;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
 }
+
+.buttons-container button:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+}
+
+#correct {
+    background: linear-gradient(145deg, #4CAF50, #2e7d32);
+}
+
+#correct:hover {
+    background: linear-gradient(145deg, #66bb6a, #2e7d32);
+}
+
+#wrong {
+    background: linear-gradient(145deg, #f44336, #c62828);
+}
+
+#wrong:hover {
+    background: linear-gradient(145deg, #ef5350, #c62828);
+}
+
+#skip img {
+    width: 50%;
+    border-radius: 50%;
+}
+
+.score-container {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+}
+
+.score-container h2 {
+    font-size: 1.7rem;
+    text-transform: uppercase;
+}
+

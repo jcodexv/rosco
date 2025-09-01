@@ -1,22 +1,31 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rosco</title>
-    <link rel="stylesheet" href="./css/main.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rosco</title>
+  <link rel="stylesheet" href="./css/main.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
-    <div class="rosco-game">
-        <div class="circle-container"></div>
-    
-        <div class="buttons-container">
-            <button id="correct">✔️</button>
-            <button id="wrong">✖️</button>
-            <button id="skip">Pasapalabra</button>
-        </div>
+  <div class="rosco-game">
+
+    <header class="game-header">
+      <h2 id="timer">TIME: 10:00</h2>
+    </header>
+
+    <div class="circle-container"></div>
+
+    <div class="buttons-container">
+      <button id="correct"><i class="fa-solid fa-check"></i></button>
+      <button id="wrong"><i class="fa-solid fa-x"></i></button>
+      <button id="skip"><img src="./img/pasapalabra.jpg" alt=""></button>
     </div>
 
-<script src="./js/script.js"></script>
+    <div class="score-container">
+    </div>
+  </div>
+
+  <script src="./js/script.js"></script>
 </body>
 </html>
