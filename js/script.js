@@ -66,12 +66,18 @@ function handleButtonClick(callback) {
   document.activeElement.blur();
 }
 
+const correctSound = new Audio('./resources/correct.mp3');
+const wrongSound = new Audio('./resources/wrong.wav');
+const skipSound = new Audio('./resources/skip.wav');
+
 correctButton.addEventListener('click', () => {
   handleButtonClick(() => {
     letters[currentIndex].classList.remove('skip', 'wrong');
     letters[currentIndex].classList.add('correct');
     score++;
-    scoreContainer.querySelector('.score').textContent = `score: ${score}`;
+    scoreContainer.querySelector('.score').textContent = `Score: ${score}`;
+    correctSound.currentTime = 0; 
+    correctSound.play();
     nextLetter();
   });
 });
@@ -81,16 +87,21 @@ wrongButton.addEventListener('click', () => {
     letters[currentIndex].classList.remove('skip', 'correct');
     letters[currentIndex].classList.add('wrong');
     score--;
-    scoreContainer.querySelector('.score').textContent = `score: ${score}`;
+    scoreContainer.querySelector('.score').textContent = `Score: ${score}`;
+    wrongSound.currentTime = 0;
+    wrongSound.play();
     nextLetter();
   });
 });
+
 
 skipButton.addEventListener('click', () => {
   handleButtonClick(() => {
     stopTimer();
     letters[currentIndex].classList.remove('correct', 'wrong');
     letters[currentIndex].classList.add('skip');
+    skipSound.currentTime = 0;
+    skipSound.play();
   });
 });
 
