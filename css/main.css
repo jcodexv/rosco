@@ -82,7 +82,6 @@ body {
     cursor: pointer;
     width: 160px;
     color: #fff;
-    background: linear-gradient(145deg, rgba(0, 0, 0, 0.6), rgba(50, 50, 50, 0.8));
     border: 1px solid #fff;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
     transition: 0.3s all;
@@ -112,6 +111,17 @@ body {
 #wrong:hover {
     background: linear-gradient(145deg, #ef5350, #c62828);
 }
+
+.skip-blue {
+    background: linear-gradient(145deg, #2196F3, #1565c0);
+    border: 1px solid #1565c0;
+}
+
+.skip-orange {
+    background: linear-gradient(145deg, #ff9800, #ef6c00);
+    border: 1px solid #ef6c00;
+}
+
 
 #skip img {
     width: 50%;
