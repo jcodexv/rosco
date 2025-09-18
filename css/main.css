@@ -3,12 +3,12 @@
 * {
     margin: 0;
     padding: 0;
-    font-family: "Epunda Sans", sans-serif;
     box-sizing: border-box;
+    font-family: "Epunda Sans", sans-serif;
 }
 
 body {
-    background-color: #000;
+    background: #000;
     color: #fff;
     overflow: hidden;
 }
@@ -19,122 +19,151 @@ body {
     align-items: center;
     justify-content: center;
     width: 100vw;
-    min-height: 100vh;
+    height: 100vh;
     position: relative;
     text-align: center;
 }
 
 .game-header {
-    margin-bottom: 25px;
+    margin-bottom: 12px;
 }
 
-.game-header h1 {
-    font-size: 2.5rem;
-    margin-bottom: 10px;
+.timer-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    justify-content: center;
 }
 
 #timer {
     font-size: 1.8rem;
-    color: #ffeb3b;
-    margin-bottom: -40px;
+    color: var(--main-color, #ffeb3b);
+}
+
+#pause-toggle {
+    background: transparent;
+    border: 2px solid currentColor;
+    border-radius: 8px;
+    padding: 6px 15px;
+    cursor: pointer;
+    color: inherit;
+    font-size: 1.05rem;
+}
+
+#bonus-time {
+    font-size: 1.1rem;
+    margin-top: 6px;
+    height: 20px;
+    color: #9be89b;
+    font-weight: 700;
 }
 
 .circle-container {
     position: relative;
-    width: 85vmin;
-    height: 85vmin;
+    width: 75vmin;
+    height: 75vmin;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
 .letter {
-    font-size: 1.8rem;
+    font-size: 1.85rem;
     position: absolute;
-    width: 55px;
-    height: 55px;
+    width: 52px;
+    height: 52px;
     border-radius: 50%;
     display: flex;
-    justify-content: center;
     align-items: center;
-    font-weight: bold;
+    justify-content: center;
+    font-weight: 700;
     top: 50%;
     left: 50%;
-    border: 1px solid #fff;
+    border: 2px solid var(--main-color, #ffeb3b);
     cursor: pointer;
-    transition: 0.7s background-color, 0.7s border;
+    transition: 0.45s background-color, 0.45s border, 0.2s transform;
+    background: transparent;
+    color: #fff;
+    opacity: 0.8;
+}
+
+.letter.current-border {
+    box-shadow: 0 0 18px rgba(255, 255, 255, 0.39);
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.6);
+}
+
+.letter.correct {
+    background: linear-gradient(145deg, #4CAF50, #2e7d32);
+    border: 2px solid #2e7d32;
+}
+
+.letter.wrong {
+    background: linear-gradient(145deg, #f44336, #c62828);
+    border: 2px solid #c62828;
+}
+
+.letter.skipped {
+    background: linear-gradient(145deg, #2196F3, #1565c0) !important;
+    border: 2px solid #1565c0;
 }
 
 .buttons-container {
     position: absolute;
-    bottom: 30px;
-    left: 30px;
+    bottom: 18px;
+    left: 18px;
     display: flex;
     flex-direction: column;
-    gap: 15px;
-}
-
-.buttons-container button {
-    font-size: 1.5rem;
-    padding: 12px 15px;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    width: 160px;
-    color: #fff;
-    border: 1px solid #fff;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
-    transition: 0.3s all;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     gap: 10px;
 }
 
-.buttons-container button:hover {
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+.buttons-container button {
+    font-size: 1.42rem;
+    padding: 8px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    width: 140px;
+    height: 50px;
+    color: #fff;
+    border: 2px solid #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.04);
 }
 
 #correct {
-    background: linear-gradient(145deg, #4CAF50, #2e7d32);
+    background: linear-gradient(145deg, #4CAF50, #2e7d32) !important;
 }
 
 #correct:hover {
-    background: linear-gradient(145deg, #66bb6a, #2e7d32);
+    background: linear-gradient(145deg, #66bb6a, #2e7d32) !important;
 }
 
 #wrong {
-    background: linear-gradient(145deg, #f44336, #c62828);
+    background: linear-gradient(145deg, #f44336, #c62828) !important;
 }
 
 #wrong:hover {
-    background: linear-gradient(145deg, #ef5350, #c62828);
+    background: linear-gradient(145deg, #ef5350, #c62828) !important;
 }
 
-.skip-blue {
-    background: linear-gradient(145deg, #2196F3, #1565c0);
-    border: 1px solid #1565c0;
+#skip {
+    background: linear-gradient(145deg, #2196F3, #1565c0) !important;
 }
 
-.skip-orange {
-    background: linear-gradient(145deg, #ff9800, #ef6c00);
-    border: 1px solid #ef6c00;
-}
-
-
-#skip img {
-    width: 50%;
-    border-radius: 50%;
+#skip:hover {
+    background: linear-gradient(145deg, #42a5f5, #0d47a1) !important;
 }
 
 .score-container {
     position: absolute;
-    bottom: 30px;
-    right: 30px;
+    right: 18px;
+    bottom: 18px;
 }
 
 .score-container h2 {
-    font-size: 1.7rem;
+    font-size: 1.75rem;
     text-transform: uppercase;
 }

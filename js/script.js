@@ -11,7 +11,7 @@ lettersArray.forEach(letterChar => {
 const letters = document.querySelectorAll('.letter');
 letters.forEach((letter, i) => {
   const angle = (i / letters.length) * 360;
-  letter.style.transform = `rotate(${angle}deg) translateY(-40vmin) rotate(-${angle}deg)`; 
+  letter.style.transform = `rotate(${angle}deg) translateY(-36vmin) rotate(-${angle}deg)`;  
 });
 
 let currentIndex = 0;
@@ -39,37 +39,40 @@ function showToast(message) {
 
 function highlightCurrent() {
   letters.forEach(letter => letter.classList.remove('current-border'));
-  if(currentIndex < letters.length) letters[currentIndex].classList.add('current-border');
+  if (currentIndex < letters.length) letters[currentIndex].classList.add('current-border');
+}
+
+function findNextUnanswered(fromIndex) {
+  let idx = fromIndex;
+  do {
+    idx = (idx + 1) % letters.length;
+    if (!letters[idx].classList.contains('correct') && !letters[idx].classList.contains('wrong')) {
+      return idx;
+    }
+  } while (idx !== fromIndex);
+  return -1;
 }
 
 function nextLetter() {
-  letters[currentIndex].classList.remove('current-border');
-
-  // buscar la siguiente letra aún no respondida (ni correct, ni wrong)
-  let found = false;
-  let startIndex = currentIndex;
-
-  do {
-    currentIndex = (currentIndex + 1) % letters.length;
-    if (!letters[currentIndex].classList.contains("correct") &&
-        !letters[currentIndex].classList.contains("wrong")) {
-      found = true;
-      break;
-    }
-  } while (currentIndex !== startIndex);
-
-  if (!found) {
+  const next = findNextUnanswered(currentIndex);
+  if (next === -1) {
     stopTimer();
     setButtonsDisabled(true);
     showToast("El juego ha finalizado, reinicia la ventana para iniciar otro.");
     return;
   }
-  letters[currentIndex].classList.add("current-border");
+  letters[currentIndex].classList.remove('current-border');
+  currentIndex = next;
+  highlightCurrent();
 }
 
 function handleButtonClick(callback) {
-  if(timerInterval === null) {
-    showToast("El juego está pausado, presiona ESPACIO o el botón para reanudarlo.");
+  if (timerInterval === null && !awaitingResume && !gameStarted) {
+    showToast("Todavía no ha iniciado el juego, presiona ESPACIO para empezarlo.");
+    return;
+  }
+  if (timerInterval === null && awaitingResume) {
+    showToast("Presiona ESPACIO para reanudar el juego.");
     return;
   }
   callback();
@@ -77,66 +80,21 @@ function handleButtonClick(callback) {
 }
 
 const correctSound = new Audio('./resources/correct.mp3');
-const wrongSound = new Audio('./resources/wrong.wav');
+const wrongSound = new Audio('./resources/wrong.mp3');
 const skipSound = new Audio('./resources/skip.wav');
 
-correctButton.addEventListener('click', () => {
-  handleButtonClick(() => {
-    letters[currentIndex].classList.remove('skip','wrong');
-    letters[currentIndex].classList.add('correct');
-    score++;
-    time += 10; 
-    updateTimerDisplay();
-    scoreContainer.querySelector('.score').textContent = `Score: ${score}`;
-    correctSound.currentTime = 0; 
-    correctSound.play();
-    showBonusTime();
-    nextLetter();
-  });
-});
+correctSound.volume = 0.95;
+wrongSound.volume = 0.95;
+skipSound.volume = 0.9;
 
-wrongButton.addEventListener('click', () => {
-  handleButtonClick(() => {
-    letters[currentIndex].classList.remove('skip','correct');
-    letters[currentIndex].classList.add('wrong');
-    score--;
-    scoreContainer.querySelector('.score').textContent = `Score: ${score}`;
-    wrongSound.currentTime = 0;
-    wrongSound.play();
-    stopTimer();
-    nextLetter();
-  });
-});
-
-skipButton.addEventListener('click', () => {
-  handleButtonClick(() => {
-    stopTimer();
-    letters[currentIndex].classList.remove('correct','wrong');
-    letters[currentIndex].classList.add('skip');
-    skipSound.currentTime = 0;
-    skipSound.play();
-    nextLetter();
-  });
-});
-
-document.addEventListener('keydown', (e) => {
-  if (e.code === 'Space') togglePause();
-});
-pauseToggle.addEventListener('click', togglePause);
-
-function togglePause() {
-  if (timerInterval) {
-    stopTimer();
-    pauseToggle.innerHTML = `<i class="fa-solid fa-play"></i>`;
-  } else {
-    startTimer();
-    pauseToggle.innerHTML = `<i class="fa-solid fa-pause"></i>`;
-  }
-}
-
-
-let time = 300; 
+let time = 300;
 let timerInterval = null;
+let gameStarted = false;
+let awaitingResume = false;
+
+const scoreContainer = document.querySelector('.score-container');
+let score = 0;
+scoreContainer.innerHTML = `<h2 class="score">Puntación: ${score}</h2>`;
 
 function updateTimerDisplay() {
   const minutes = String(Math.floor(time / 60)).padStart(2, '0');
@@ -144,9 +102,14 @@ function updateTimerDisplay() {
   document.getElementById('timer').textContent = `TIEMPO: ${minutes}:${seconds}`;
 }
 
+function showBonusTime() {
+  const bonus = document.getElementById('bonus-time');
+  bonus.textContent = "+10s extra";
+  setTimeout(() => { bonus.textContent = ""; }, 3000);
+}
+
 function startTimer() {
   if (!timerInterval) {
-    setButtonsDisabled(false);
     timerInterval = setInterval(() => {
       if (time > 0) {
         time--;
@@ -158,6 +121,7 @@ function startTimer() {
         showToast("El juego ha finalizado, reinicia la ventana para iniciar otro.");
       }
     }, 1000);
+    setButtonsDisabled(false);
   }
 }
 
@@ -168,47 +132,112 @@ function stopTimer() {
   }
 }
 
-const scoreContainer = document.querySelector('.score-container');
-let score = 0;
-scoreContainer.innerHTML = `<h2 class="score">Score: ${score}</h2>`;
-
-function showBonusTime() {
-  const bonus = document.createElement('span');
-  bonus.textContent = " +10s extra";
-  bonus.style.color = "limegreen";
-  bonus.style.marginLeft = "10px";
-  bonus.style.fontWeight = "bold";
-  bonus.style.animation = "fadeOut 3s forwards";
-  document.getElementById('timer').appendChild(bonus);
-  setTimeout(() => bonus.remove(), 3000);
+function setPausedVisual(paused) {
+  if (paused) {
+    pauseToggle.innerHTML = `<i class="fa-solid fa-play"></i>`;
+    setButtonsDisabled(true);
+  } else {
+    pauseToggle.innerHTML = `<i class="fa-solid fa-pause"></i>`;
+    setButtonsDisabled(false);
+  }
 }
 
-const style = document.createElement('style');
-style.innerHTML = `
-.letter.correct { background-color: #4CAF50; border: 1px solid #4CAF50; }
-.letter.wrong { background-color: #f44336; border: 1px solid #f44336; }
-.letter.skip { background-color: #2196F3; border: 1px solid #2196F3; }
-.letter.current-border { border: 2px solid #fff; box-shadow: 0 0 15px #fff; }
-.toast-notification {
-  position: fixed;
-  bottom: 30px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #1f1f1f;
-  color: #fff;
-  padding: 12px 20px;
-  border-radius: 6px;
-  font-size: 1rem;
-  box-shadow: 0 0 12px #00000088;
-  z-index: 9999;
-  opacity: 0.95;
-  text-align: center;
+correctButton.addEventListener('click', () => {
+  handleButtonClick(() => {
+    letters[currentIndex].classList.remove('wrong');
+    letters[currentIndex].classList.add('correct');
+    score++;
+    time += 10;
+    updateTimerDisplay();
+    scoreContainer.querySelector('.score').textContent = `Score: ${score}`;
+    correctSound.currentTime = 0; correctSound.play();
+    showBonusTime();
+    nextLetter();
+  });
+});
+
+wrongButton.addEventListener('click', () => {
+  handleButtonClick(() => {
+    letters[currentIndex].classList.remove('correct');
+    letters[currentIndex].classList.add('wrong');
+    score--;
+    scoreContainer.querySelector('.score').textContent = `Score: ${score}`;
+    wrongSound.currentTime = 0; wrongSound.play();
+    stopTimer();
+    awaitingResume = true;
+    setPausedVisual(true);
+    nextLetter();
+  });
+});
+
+skipButton.addEventListener('click', () => {
+  handleButtonClick(() => {
+    skipSound.currentTime = 0; skipSound.play();
+    letters[currentIndex].classList.add('skipped');
+    stopTimer();
+    awaitingResume = true;
+    setPausedVisual(true);
+    nextLetter();
+  });
+});
+
+function resumeAfterAwaiting() {
+  if (!awaitingResume) return;
+  awaitingResume = false;
+  setPausedVisual(false);
+  startTimer();
 }
-@keyframes fadeOut {
-  0% { opacity: 1; }
-  100% { opacity: 0; }
+
+function togglePause() {
+  if (!gameStarted) {
+    gameStarted = true;
+    startTimer();
+    setPausedVisual(false);
+    return;
+  }
+  if (awaitingResume) {
+    resumeAfterAwaiting();
+    return;
+  }
+  if (timerInterval) {
+    stopTimer();
+    setPausedVisual(true);
+  } else {
+    startTimer();
+    setPausedVisual(false);
+  }
 }
-`;
-document.head.appendChild(style);
+
+pauseToggle.addEventListener('click', togglePause);
+
+document.addEventListener('keyup', (e) => {
+  if (e.code === 'Space') {
+    togglePause();
+  }
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.repeat) return;
+  const k = e.key.toLowerCase();
+  if (k === 'q') correctButton.click();
+  if (k === 'e') wrongButton.click();
+  if (k === 'r') skipButton.click();
+  if (k === 'v') {
+    currentThemeColor = themeColors[Math.floor(Math.random() * themeColors.length)];
+    applyTheme(currentThemeColor);
+  }
+});
+
+function applyTheme(color) {
+  document.body.style.setProperty('--main-color', color);
+  document.querySelectorAll('.letter').forEach(l => l.style.borderColor = color);
+  document.getElementById('timer').style.color = color;
+  pauseToggle.style.color = color;
+  pauseToggle.style.borderColor = color;
+}
+const themeColors = ['#ffeb3b','#2196f3'];
+let currentThemeColor = themeColors[Math.floor(Math.random() * themeColors.length)];
+applyTheme(currentThemeColor);
 
 highlightCurrent();
+updateTimerDisplay();
