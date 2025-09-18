@@ -84,13 +84,14 @@ body {
     transition: 0.45s background-color, 0.45s border, 0.2s transform;
     background: transparent;
     color: #fff;
-    opacity: 0.8;
+    opacity: 0.85;
 }
 
 .letter.current-border {
-    box-shadow: 0 0 18px rgba(255, 255, 255, 0.39);
+    box-shadow: 0 0 18px rgba(255, 255, 255, 0.493);
     opacity: 1;
     transform: translate(-50%, -50%) scale(1.6);
+    font-size: 1.9rem;
 }
 
 .letter.correct {
