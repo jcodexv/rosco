@@ -68,7 +68,7 @@ body {
 }
 
 .letter {
-    font-size: 1.85rem;
+    font-size: 1.86rem;
     position: absolute;
     width: 52px;
     height: 52px;
@@ -123,8 +123,8 @@ body {
     padding: 8px 14px;
     border-radius: 10px;
     cursor: pointer;
-    width: 140px;
-    height: 50px;
+    width: 147px;
+    height: 57px;
     color: #fff;
     border: 2px solid #fff;
     display: flex;
@@ -154,6 +154,13 @@ body {
     background: linear-gradient(145deg, #2196F3, #1565c0) !important;
 }
 
+#skip img {
+    width: 61px;
+    height: 49px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
 #skip:hover {
     background: linear-gradient(145deg, #42a5f5, #0d47a1) !important;
 }
@@ -167,4 +174,18 @@ body {
 .score-container h2 {
     font-size: 1.75rem;
     text-transform: uppercase;
+}
+
+.instructions {
+    position: absolute;
+    top: 18px;
+    left: 18px;
+    text-align: left;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    background: rgba(255, 255, 255, 0.048);
+    padding: 12px;
+    border-radius: 8px;
+    max-width: 220px;
+    opacity: 0.75;
 }

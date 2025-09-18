@@ -50,7 +50,6 @@ function findNextUnanswered(fromIndex) {
     let initialIndex = fromIndex;
     let idx = fromIndex;
 
-    // First, try to find the next brand new, unanswered letter.
     do {
         idx = (idx + 1) % letters.length;
         if (!letters[idx].classList.contains('correct') && !letters[idx].classList.contains('wrong') && !letters[idx].classList.contains('skipped')) {
@@ -58,13 +57,10 @@ function findNextUnanswered(fromIndex) {
         }
     } while (idx !== initialIndex);
 
-    // If all new letters are answered, check for unanswered letters in the skipped list.
     if (skippedLetters.length > 0) {
-        // Find the index of the current letter in the skipped list.
         let currentSkippedListIndex = skippedLetters.indexOf(fromIndex);
         let nextSkippedListIndex = (currentSkippedListIndex + 1) % skippedLetters.length;
 
-        // Iterate through the skipped letters starting from the next one.
         for (let i = 0; i < skippedLetters.length; i++) {
             let letterIndex = skippedLetters[nextSkippedListIndex];
             if (!letters[letterIndex].classList.contains('correct') && !letters[letterIndex].classList.contains('wrong')) {
@@ -74,7 +70,7 @@ function findNextUnanswered(fromIndex) {
         }
     }
 
-    return -1; // If no new or skipped letters are found, the game is over.
+    return -1;
 }
 
 function nextLetter() {
@@ -134,6 +130,11 @@ function showBonusTime() {
     }, 3000);
 }
 
+const tickingSound = new Audio('./resources/ticking.mp3');
+tickingSound.volume = 0.3;
+tickingSound.loop = true;
+tickingSound.currentTime = 10;
+
 function startTimer() {
     if (!timerInterval) {
         timerInterval = setInterval(() => {
@@ -145,9 +146,12 @@ function startTimer() {
                 timerInterval = null;
                 setButtonsDisabled(true);
                 showToast("El juego ha finalizado, reinicia la ventana para iniciar otro.");
+                tickingSound.pause();
+                tickingSound.currentTime = 10;
             }
         }, 1000);
         setButtonsDisabled(false);
+        tickingSound.play();
     }
 }
 
@@ -155,6 +159,7 @@ function stopTimer() {
     if (timerInterval) {
         clearInterval(timerInterval);
         timerInterval = null;
+        tickingSound.pause();
     }
 }
 
@@ -175,7 +180,7 @@ correctButton.addEventListener('click', () => {
         score++;
         time += 10;
         updateTimerDisplay();
-        scoreContainer.querySelector('.score').textContent = `Score: ${score}`;
+        scoreContainer.querySelector('.score').textContent = `Puntación: ${score}`;
         correctSound.currentTime = 0;
         correctSound.play();
         showBonusTime();
@@ -188,7 +193,7 @@ wrongButton.addEventListener('click', () => {
         letters[currentIndex].classList.remove('correct', 'skipped');
         letters[currentIndex].classList.add('wrong');
         score--;
-        scoreContainer.querySelector('.score').textContent = `Score: ${score}`;
+        scoreContainer.querySelector('.score').textContent = `Puntación: ${score}`;
         wrongSound.currentTime = 0;
         wrongSound.play();
         stopTimer();
@@ -273,3 +278,4 @@ applyTheme(currentThemeColor);
 
 highlightCurrent();
 updateTimerDisplay();
+
