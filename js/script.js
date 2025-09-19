@@ -76,9 +76,7 @@ function findNextUnanswered(fromIndex) {
 function nextLetter() {
     const next = findNextUnanswered(currentIndex);
     if (next === -1) {
-        stopTimer();
-        setButtonsDisabled(true);
-        showToast("El juego ha finalizado, reinicia la ventana para iniciar otro.");
+        gameOver();
         return;
     }
     letters[currentIndex].classList.remove('current-border');
@@ -135,6 +133,32 @@ tickingSound.volume = 0.3;
 tickingSound.loop = true;
 tickingSound.currentTime = 10;
 
+function gameOver() {
+    stopTimer();
+    setButtonsDisabled(true);
+    const gameOverAlert = document.createElement('div');
+    gameOverAlert.className = 'game-over-alert';
+    const currentYear = new Date().getFullYear();
+    gameOverAlert.innerHTML = `
+        <h3>Fin del juego</h3>
+        <p>Puntación final: ${score}</p>
+        <p>Creador de la página: <span class="creator">Juan Agustín Avalos</span>, <span class="course">5°COM</span> | <span class="creator">@jcodexv</span></p>
+        <p>-Año: ${currentYear}-</p>
+        <div class="progress-bar-container">
+            <div class="progress-bar"></div>
+        </div>
+    `;
+    document.body.appendChild(gameOverAlert);
+
+    setTimeout(() => {
+        gameOverAlert.style.opacity = '0'; 
+    }, 15000);
+
+    setTimeout(() => {
+        gameOverAlert.remove();
+    }, 15000);
+}
+
 function startTimer() {
     if (!timerInterval) {
         timerInterval = setInterval(() => {
@@ -142,12 +166,7 @@ function startTimer() {
                 time--;
                 updateTimerDisplay();
             } else {
-                clearInterval(timerInterval);
-                timerInterval = null;
-                setButtonsDisabled(true);
-                showToast("El juego ha finalizado, reinicia la ventana para iniciar otro.");
-                tickingSound.pause();
-                tickingSound.currentTime = 10;
+                gameOver();
             }
         }, 1000);
         setButtonsDisabled(false);
@@ -278,4 +297,3 @@ applyTheme(currentThemeColor);
 
 highlightCurrent();
 updateTimerDisplay();
-
